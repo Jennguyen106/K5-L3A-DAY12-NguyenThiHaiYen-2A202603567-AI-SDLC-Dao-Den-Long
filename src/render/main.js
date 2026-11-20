@@ -3,6 +3,7 @@ import { createConfig, createLevel, step, TICK_RATE, NIGHTS } from '../logic/ind
 import { createWorld } from './scene.js';
 import { createHud } from './hud.js';
 import { createInput } from './input.js';
+import { createLeaderboardUi } from './leaderboard-ui.js';
 
 const DT = 1 / TICK_RATE;
 const MAX_FRAME_S = 0.25;
@@ -30,6 +31,8 @@ async function boot() {
   let s = null;
   let running = false;
   let acc = 0;
+  let currentSeed = 0;
+  const lb = createLeaderboardUi();
 
   const params = new URLSearchParams(window.location.search);
   const fixedSeed = params.has('seed') ? Number(params.get('seed')) | 0 : null;
@@ -37,8 +40,10 @@ async function boot() {
   function newGame() {
     // Seed ngẫu nhiên mỗi ván ở phần hiển thị là được; logic vẫn tất định theo seed.
     const seed = fixedSeed ?? Math.floor(Math.random() * 2 ** 31);
+    currentSeed = seed;
     s = createLevel(cfg, seed);
     world.reset(s);
+    lb.hideBoard();
     input.resetYaw();
     hud.hideEnd();
     acc = 0;
@@ -70,6 +75,12 @@ async function boot() {
       case 'lantern_lit': world.lanternLit(); break;
       case 'game_over':
         hud.showEnd(ev.data, s.score);
+        // Bảng xếp hạng: score = tổng điểm các Đêm đã thắng (giao diện hiện chơi một Đêm, nên thua thì 0).
+        lb.offerEntry({
+          score: ev.data.result === 'won' ? s.score : 0,
+          nights_won: ev.data.result === 'won' ? 1 : 0,
+          seed: currentSeed,
+        });
         if (document.pointerLockElement) document.exitPointerLock();
         break;
       default: break;

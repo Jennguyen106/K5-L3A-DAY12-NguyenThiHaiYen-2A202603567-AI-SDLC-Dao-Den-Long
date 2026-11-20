@@ -13,6 +13,8 @@ export function createInput(canvas, { onRestart } = {}) {
   let dragging = false;
 
   window.addEventListener('keydown', (e) => {
+    // Đang gõ tên (ô nhập bảng xếp hạng): không coi phím là lệnh điều khiển (R, Space, …).
+    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
     if (BLOCK_DEFAULT.has(e.code)) e.preventDefault();
     if (e.repeat) return;
     held.add(e.code);

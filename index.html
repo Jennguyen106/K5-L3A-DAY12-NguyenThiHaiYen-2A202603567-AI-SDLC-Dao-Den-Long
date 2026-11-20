@@ -42,6 +42,20 @@
     button { margin-top: 14px; font: inherit; font-weight: 600; padding: 10px 22px; border: 0; border-radius: 999px;
       background: var(--warm); color: #2a1240; cursor: pointer; }
     button:hover { filter: brightness(1.1); }
+    button.secondary { background: transparent; color: var(--warm); border: 1px solid var(--warm); }
+    .buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    #lb-form { margin-top: 12px; text-align: left; }
+    #lb-form .row { display: flex; gap: 8px; margin-top: 6px; }
+    #lb-form .row button { margin-top: 0; }
+    #lb-name { flex: 1; font: inherit; font-size: 18px; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255, 179, 71, 0.5);
+      background: rgba(255, 255, 255, 0.08); color: var(--text); min-width: 0; }
+    .msg { min-height: 1.4em; font-size: 15px; }
+    .msg.error { color: #ff8a8e; }
+    .msg.ok { color: var(--warm-soft); }
+    ol.board { text-align: left; margin: 10px 0; padding-left: 28px; max-height: 50vh; overflow: auto; }
+    ol.board li { padding: 4px 0; font-variant-numeric: tabular-nums; }
+    ol.board li.me { color: var(--warm); font-weight: 700; }
+    ol.board .meta { opacity: 0.7; font-size: 14px; }
     #error { position: fixed; top: 12px; right: 12px; max-width: 420px; padding: 10px 14px; background: #5a1630;
       border-radius: 10px; }
   </style>
@@ -69,9 +83,12 @@
   <div class="overlay" id="start">
     <div class="card">
       <h1>Đảo Đèn Lồng</h1>
-      <p>Đêm nay sương đen đã nuốt hết ánh sáng của Đảo Bến. Hãy giúp Mây nhặt đom đóm và thắp lại 5 Đèn Lồng Lớn trước khi trời sáng.</p>
-      <p>Tránh Bóng Mực, hoặc tỏa sáng (F) để xua chúng đi. Bóng Mực sợ những chiếc đèn đã thắp.</p>
-      <button id="btn-start">Bắt đầu</button>
+      <p>Sương đen đã nuốt ánh sáng của Đảo Bến. Hãy giúp Mây nhặt đom đóm, thắp các Đèn Lồng Lớn và châm dầu để giữ ít nhất 3/5 đèn còn sáng khi bình minh tới.</p>
+      <p>Đèn cạn dầu sẽ tắt; Bóng Mực hút dầu của đèn yếu. Tỏa sáng (F) để xua chúng đi.</p>
+      <div class="buttons">
+        <button id="btn-start">Bắt đầu</button>
+        <button id="btn-board" class="secondary">Bảng xếp hạng</button>
+      </div>
     </div>
   </div>
 
@@ -80,7 +97,28 @@
       <h1 id="end-title">Đảo đã sáng!</h1>
       <p id="end-reason"></p>
       <p id="end-score"></p>
-      <button id="btn-restart">Chơi lại (R)</button>
+      <form id="lb-form" autocomplete="off">
+        <label for="lb-name">Lưu điểm vào bảng xếp hạng:</label>
+        <div class="row">
+          <input id="lb-name" maxlength="12" placeholder="Tên (3–12 ký tự)" aria-describedby="lb-msg">
+          <button type="submit" id="lb-save">Lưu</button>
+        </div>
+        <p id="lb-msg" class="msg" role="status"></p>
+      </form>
+      <ol id="lb-end-list" class="board" hidden></ol>
+      <div class="buttons">
+        <button id="btn-restart">Chơi lại (R)</button>
+        <button id="btn-end-board" class="secondary">Bảng xếp hạng</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="board" hidden>
+    <div class="card">
+      <h1>Bảng xếp hạng</h1>
+      <ol id="lb-list" class="board"></ol>
+      <p id="lb-board-msg" class="msg"></p>
+      <button id="btn-board-back">Quay lại</button>
     </div>
   </div>
 
