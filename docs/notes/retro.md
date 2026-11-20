@@ -9,7 +9,7 @@ Nguồn: [`ai-log.md`](ai-log.md), lịch sử git (khoảng 50 commit từ 14:5
 | 1 – Đêm 1 | v1.0 | Logic + headless + game 3D. AC1–AC14 đạt | 14/14 | AC15 một phần: ảnh chỉ cho thấy ván thua |
 | 2 – Ba hòn đảo | v1.1 | P0 xong: số chuẩn, thứ tự tick, lướt/rơi/recoil/drop, contract v1.1. 10/20 AC đạt | 27/27 | P1 dừng giữa chừng (đã stash); P2 giao diện chưa làm |
 | 3 – Đèn cạn dầu | v1.2 | P0 xong: dầu, châm/tắt/thắp lại, drain, luật `dawn_survived`, ADR, CHANGELOG | 47/47 | P3-13 (thanh dầu, mù màu) chưa làm |
-| 4 – Phát hành | v1.3 | Soak, bench (148 fps), địa hình Đêm 2/3, bảng xếp hạng, dist, README | 70/70 | Accessibility, GitHub Release, video |
+| 4 – Phát hành | v1.3 | Soak, bench (148 fps), địa hình Đêm 2/3, bảng xếp hạng, dist, README, GitHub Release v1.0.0 (zip + video demo 4 phút) | 70/70 | Accessibility (P4-07, P4-08) |
 
 Phần logic và headless (thứ được chấm tự động) luôn được ưu tiên và có test. Phần giao diện tụt lại phía sau qua từng phase: giao diện vẫn chỉ chơi được Đêm 1, chưa có thanh dầu, chưa có âm thanh.
 

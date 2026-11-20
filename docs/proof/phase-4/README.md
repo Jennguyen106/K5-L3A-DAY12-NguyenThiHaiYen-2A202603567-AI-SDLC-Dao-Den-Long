@@ -18,13 +18,13 @@ Ký hiệu: ✅ Đạt · ⚠️ Một phần · ⏳ Chưa làm.
 | P4-07 | Đổi phím + báo trùng + khôi phục mặc định, được lưu | ⏳ Chưa làm | — | |
 | P4-08 | Phụ đề/chỉ báo, giảm chuyển động, chữ ≥ 18 px, chữ lớn ×1.25 | ⏳ Chưa làm | — | HUD hiện dùng chữ 15 px, **chưa đạt** mức tối thiểu 18 px |
 | P4-09 | Clone sạch → 3 lệnh README → chơi được | ✅ Đạt | `clean-clone.txt` | Clone từ GitHub ở commit 667ae3f → `npm install` (4 s) → `npm start` → trang, three.js, API trả 200; trên bản clone `npm test` cũng xanh 70/70. Chỉ thử trên Windows 11 |
-| P4-10 | Release v1.0.0 có zip web chạy được + video | ⚠️ Một phần | `tests/p4-10-dist.test.js`, `npm run dist` | `npm run dist` tạo `dist/dao-den-long-web-v1.0.0.zip`; test kiểm zip (CRC, nội dung) và chạy server từ bản đóng gói. **Chưa** tạo GitHub Release, **chưa** có video demo |
+| P4-10 | Release v1.0.0 có zip web chạy được + video | ✅ Đạt | [Release v1.0.0](https://github.com/Jennguyen106/K5-L3A-DAY12-NguyenThiHaiYen-2A202603567-AI-SDLC-Dao-Den-Long/releases/tag/v1.0.0), `tests/p4-10-dist.test.js` | Release "v1.0.0 – Đảo Đèn Lồng" (tạo bằng `gh` lúc 2026-11-20T10:54:55Z) đính kèm 2 tệp. (1) `dao-den-long-web-v1.0.0.zip` (478,966 byte) do `npm run dist` tạo; test kiểm zip (CRC, nội dung) và chạy server từ bản đóng gói. (2) `demo.mp4` (3,860,925 byte, 240.9 s, 1164×720, có âm thanh), nén bằng ffmpeg từ bản quay màn hình gốc 653 MB cùng độ dài. Cả hai link tải trả HTTP 200 |
 
-**Tổng:** 7/10 đạt (P4-01…P4-06, P4-09); P4-10 một phần; P4-07, P4-08 chưa làm.
+**Tổng:** 8/10 đạt (P4-01…P4-06, P4-09, P4-10); P4-07, P4-08 chưa làm.
 
 **Ngoài bảng AC (TICKET-04 DoD):**
 - Tag `phase-4`: có.
-- GitHub Release v1.0.0: chưa có.
-- Video demo: chưa có.
+- GitHub Release v1.0.0 (tag `v1.0.0` trỏ cùng commit với `phase-4`): có.
+- Video demo `demo.mp4` dưới 5 phút: có, đính kèm Release; link ở đầu README.
 - Retro: [`docs/notes/retro.md`](../../notes/retro.md).
 - Phần còn thiếu từ các phase trước (Gió Lạc, Bùa Gió, gió; giao diện Đêm 2/3; tạm dừng/cài đặt; thanh dầu; âm thanh) ghi ở README, mục "Giới hạn đã biết".
