@@ -14,7 +14,7 @@ const C = {
   cloud: 0x3b3466,
 };
 
-export function createWorld(container, cfg) {
+export function createWorld(container, cfg, level) {
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -33,7 +33,7 @@ export function createWorld(container, cfg) {
   moon.position.set(-30, 60, -20);
   scene.add(moon);
 
-  buildIsland(scene, cfg);
+  buildIsland(scene, level);
   buildSky(scene);
   const groundMat = scene.getObjectByName('ground').material;
 
@@ -129,8 +129,8 @@ export function createWorld(container, cfg) {
       }
       const stunned = sh.state === 'stunned';
       const bob = 0.12 * Math.sin(time * 3 + v.phase);
-      v.group.position.set(sh.x, cfg.shade_height + bob, sh.z);
-      v.group.lookAt(s.player.x, cfg.shade_height + bob, s.player.z);
+      v.group.position.set(sh.x, sh.y + bob, sh.z);
+      v.group.lookAt(s.player.x, sh.y + bob, s.player.z);
       v.body.material.color.setHex(stunned ? C.stunned : C.ink);
       v.body.material.emissive.setHex(stunned ? 0x6c6280 : C.inkGlow);
       v.body.material.emissiveIntensity = stunned ? 0.25 : 0.55 + 0.25 * Math.sin(time * 5 + v.phase);
@@ -282,8 +282,8 @@ function hash(id) {
   return h / 159;
 }
 
-function buildIsland(scene, cfg) {
-  const R = cfg.island_radius;
+function buildIsland(scene, level) {
+  const R = level.radius;
   const ground = new THREE.Mesh(
     new THREE.CylinderGeometry(R, R * 0.82, 4, 72),
     new THREE.MeshStandardMaterial({ color: C.groundDark.clone(), roughness: 0.95 }),

@@ -1,5 +1,5 @@
 // Vòng lặp game trong trình duyệt: logic chạy cố định 60 tick/giây (dùng chung src/logic).
-import { createConfig, createLevel, step, TICK_RATE } from '../logic/index.js';
+import { createConfig, createLevel, step, TICK_RATE, NIGHTS } from '../logic/index.js';
 import { createWorld } from './scene.js';
 import { createHud } from './hud.js';
 import { createInput } from './input.js';
@@ -12,7 +12,7 @@ async function boot() {
   if (!res.ok) throw new Error(`không tải được game.contract.json (${res.status})`);
   const cfg = createConfig((await res.json()).tuning);
 
-  const world = createWorld(document.getElementById('app'), cfg);
+  const world = createWorld(document.getElementById('app'), cfg, NIGHTS[1]);
   const hud = createHud(cfg);
   const canvas = world.renderer.domElement;
 

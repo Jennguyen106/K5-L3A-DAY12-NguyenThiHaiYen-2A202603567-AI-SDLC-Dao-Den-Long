@@ -1,5 +1,5 @@
 // Bàn phím + chuột → input theo đúng định dạng của logic (move, cam_yaw_deg, nút).
-// WASD/↑↓ đi, chuột hoặc Q/Z (←/→) xoay camera, Space nhảy, E nạp đèn, F tỏa sáng, R chơi lại.
+// WASD/↑↓ đi, chuột hoặc Q/Z (←/→) xoay camera, Space nhảy, Shift lướt, E nạp đèn, F tỏa sáng, R chơi lại.
 
 const ROTATE_DEG_PER_S = 120;
 const MOUSE_DEG_PER_PX = 0.25;
@@ -66,6 +66,7 @@ export function createInput(canvas, { onRestart } = {}) {
         jump: down('Space'),
         interact: down('KeyE'),
         pulse: down('KeyF'),
+        dash: down('ShiftLeft') || down('ShiftRight'),
       };
     },
     consumeLatches() {
