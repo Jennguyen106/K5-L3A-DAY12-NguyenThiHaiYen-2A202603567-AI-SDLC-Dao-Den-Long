@@ -53,3 +53,26 @@ player_speed 6 · carry_capacity 10 · lantern_cost 10 · lantern_count_night1 5
 | P2-18 | UI | tạm dừng Esc/P có Tiếp tục / Chơi lại / Cài đặt / Về menu; cài đặt được lưu (ảnh chụp) |
 | P2-19 | UI | HUD đủ các phần, bảng màu chuẩn, có âm thanh (ảnh chụp) |
 | P2-20 | UI | ≥ 30 FPS ở 1280×720 (ảnh có số FPS + cấu hình máy) |
+
+## 5. Giả định thêm khi cài P0 (ticket chưa nói rõ)
+
+- **Góc trên bản đồ:** x = r·cos θ, z = r·sin θ. Cách này khớp với "tầng 1 ở nửa z > 0" và các điểm 20°…160° của Đêm 3.
+- **Bộ đếm theo tick:** bất tử 90, choáng 120, lướt 12, hồi chiêu lướt 90 / Tỏa Sáng 180, đếm từ tick kích hoạt.
+  - Choáng ở tick T thì các tick T…T+119 là `stunned`, tick T+120 hết choáng.
+  - Bị đánh ở tick T thì lần chạm sớm nhất tiếp theo là T+90.
+  - Rơi ở tick T thì hồi sinh ở tick T+60.
+- **Hết choáng / hết recoil:** chuyển sang `chase` nếu Mây cách ≤ 12 m, ngược lại `wander`.
+- **Recoil:** lùi đều 2 m trong 60 tick theo hướng ra xa Mây, tính lúc gây hit. Trong lúc recoil không gây hit.
+- **Wander:** điểm đích ngẫu nhiên (PRNG) trong bán kính 4 m quanh điểm sinh, tốc độ 1.5 m/s.
+- **Bóng Mực trong scenario:** mặc định `wander` (tự chuyển `chase` nếu Mây ≤ 12 m). `state_ticks_left` mặc định: `spawning` 30, `stunned` 120, `recoil` 60.
+- **Độ cao Bóng Mực:** tâm luôn ở mặt đất + 1.0 m. Tọa độ y trong scenario bị bỏ qua.
+- **Đẩy ra khỏi vùng an toàn:** đẩy đều theo hướng từ đèn ra, tới mép đúng sau tối đa 30 tick. Trong lúc bị đẩy, Bóng Mực không di chuyển theo AI và không gây hit. Áp dụng cho mọi con ở trong vùng của đèn đã sáng, kể cả đèn đặt sẵn `lit: true` trong scenario.
+- **Vùng an toàn là vật cản:** di chuyển, recoil và đẩy lùi do Tỏa Sáng đều bị chặn ở mép 6 m.
+- **Tỏa Sáng:** trúng mọi Bóng Mực trong tầm, kể cả con đang `spawning`. Hướng đẩy chốt lúc kích hoạt.
+- **Điểm trống cho đom đóm:** điểm sinh không có đom đóm `random` nào gắn với nó. Trần 30 tính tổng mọi đom đóm, gồm cả `dropped`. Đom đóm trong scenario không gắn với điểm sinh nào.
+- **Đom đóm rơi:** góc và bán kính chọn bằng PRNG trong vành 1.5–2.5 m. Điểm không có đất thì thử lại (tối đa 16 lần); không được thì đặt tại chỗ Mây đứng.
+- **Rơi:** Mây rời mặt đất khi bước ra ngoài đảo, rơi theo trọng lực. Chỉ khi Y < −10 mới tính là rơi. Trong 60 tick chờ hồi sinh, Mây đứng yên tại chỗ rơi, không nhặt, không tương tác, không bị chạm.
+- **Snapshot `player.invuln`:** kiểu boolean (true khi đang bất tử hoặc đang chờ hồi sinh). `ttl_s` của đom đóm `random` là `null`.
+- **Sự kiện `night_start`:** ghi ngay sau snapshot tick 0, với `tick: 0`.
+- **Pause:** khi bỏ tạm dừng thì phát `resumed` và chạy tiếp bước mô phỏng ngay trong tick đó.
+- **Chưa cài (P1):** `--night 2|3`, Gió Lạc, Bùa Gió, gió. Headless trả exit 1 kèm thông báo khi gặp `--night 2|3`, hoặc scenario có `drifters`/`charms` không rỗng hay `wind_enabled: true`.
