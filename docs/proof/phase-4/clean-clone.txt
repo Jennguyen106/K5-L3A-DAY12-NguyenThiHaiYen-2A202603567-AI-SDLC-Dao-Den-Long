@@ -1,0 +1,37 @@
+# Kiểm tra clone sạch – làm đúng 3 lệnh trong README (mục "Cài đặt và chạy")
+# Ngày: 2026-11-20T10:20:52Z · Node v26.13.1 · npm 11.20.0 · MINGW64_NT-10.0-26200
+# Thư mục tạm mới, rỗng, không có node_modules, không có data/.
+
+$ git clone https://github.com/Jennguyen106/K5-L3A-DAY12-NguyenThiHaiYen-2A202603567-AI-SDLC-Dao-Den-Long.git && cd K5-L3A-DAY12-NguyenThiHaiYen-2A202603567-AI-SDLC-Dao-Den-Long
+exit 0 · commit 667ae3f · 1 s
+
+$ npm install
+added 3 packages, and audited 4 packages in 3s
+found 0 vulnerabilities
+exit 0 · 4 s
+
+$ npm start      (chạy bằng script kiểm tra: chờ URL, tải thử trang, rồi dừng server)
+(Ghi chú: cảnh báo DEP0190 của Node đến từ script kiểm tra – nó gọi npm qua shell – không phải từ game; đã lược bỏ.)
+> dao-den-long@1.0.0 start
+> node tools/serve.js
+
+Đảo Đèn Lồng đang chạy tại: http://localhost:18700/
+GET / -> 200
+GET /node_modules/three/build/three.module.js -> 200
+GET /src/render/main.js -> 200
+GET /game.contract.json -> 200
+GET /api/leaderboard -> 200
+KẾT QUẢ: server chạy, trang game + three.js + API tải được (200). Đã dừng server.
+exit 0
+
+# Kiểm tra thêm trên chính bản clone (không thuộc 3 lệnh chơi game):
+$ npm test
+ℹ tests 70
+ℹ pass 70
+ℹ fail 0
+ℹ skipped 0
+$ node src/headless.js --seed 42 --night 1 --ticks 600 --out out.jsonl
+exit 0 · 65 dòng · dòng cuối: {"type":"end","ticks":600,"state":"playing","score":0}
+
+# Ghi chú: chỉ kiểm trên Windows 11 (Git Bash). Chưa kiểm trên macOS/Linux; code dùng path/URL, không có đường dẫn Windows.
+# Phần hiển thị 3D đã được kiểm riêng bằng ảnh chụp Playwright (docs/screenshots/).
