@@ -10,10 +10,10 @@ export const HEADLESS = path.join(ROOT, 'src', 'headless.js');
 export const scenario = (name) => path.join(ROOT, 'scenarios', name);
 export const contract = () => JSON.parse(fs.readFileSync(path.join(ROOT, 'game.contract.json'), 'utf8'));
 
-export function runHeadless({ seed = 1, ticks, scenario: sc, inputs, every } = {}) {
+export function runHeadless({ seed = 1, night = 1, ticks, scenario: sc, inputs, every } = {}) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ddl-'));
   const out = path.join(dir, 'out.jsonl');
-  const args = [HEADLESS, '--seed', String(seed), '--night', '1', '--ticks', String(ticks), '--out', out];
+  const args = [HEADLESS, '--seed', String(seed), '--night', String(night), '--ticks', String(ticks), '--out', out];
   if (sc) args.push('--scenario', scenario(sc));
   if (inputs) args.push('--inputs', scenario(inputs));
   if (every) args.push('--snapshot-every', String(every));
