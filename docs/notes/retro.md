@@ -38,6 +38,7 @@ Phần logic và headless (thứ được chấm tự động) luôn được ư
 | 4 | Viết lại AC13 làm mất comment `[v1.1]` | Meta-test P2-02 đỏ | Khôi phục lịch sử lý do |
 | 5 | Đặt nội dung có backtick trong chuỗi bash nháy kép: bash chạy chúng như lệnh, khởi động 2 server treo | Output lạ + lệnh treo | Dừng tác vụ, dừng 3 tiến trình node, kiểm tra không file nào bị đổi, viết lại bằng Write |
 | 6 | Ảnh `latern.pnj.png` (Phase 1) không có đèn nào sáng như tên gợi ý | AI mở xem từng ảnh trước khi ghi bằng chứng | Ghi AC15 là "một phần" |
+| 7 | **Tag `phase-3` bị quên ở bước chốt Phase 3**: chuyển thẳng sang Phase 4 mà không tag và không lưu bằng chứng riêng | `git ls-remote --tags origin` lúc chốt Phase 4 chỉ thấy phase-1, 2, 4 | Tag tại commit cuối Phase 3 (`c32391d`), **push muộn lúc 17:26**. Bằng chứng Phase 3 được tạo sau, trong Phase 4, bằng cách chạy `npm test` trên worktree checkout tag `phase-3` (`docs/proof/phase-3/`) |
 
 Ngoài ra AI chủ động báo các chỗ spec có vấn đề, thay vì im lặng làm theo:
 - luật "đèn đầy dầu không được chọn" không xảy ra được qua headless, vì hao dầu chạy trước bước tương tác;
@@ -84,4 +85,5 @@ Nhờ cache ổn định, 99% input không phải tính lại.
 - **Mỗi commit đều xanh:** gộp "đổi logic" và "sửa test cũ" vào cùng một commit khi luật thay đổi, và thêm hook pre-commit chạy `npm test`.
 - **Không bắt đầu P1 khi thời gian không đủ:** chốt P0 sạch rồi mới mở phần mới, thay vì phải stash phần dở.
 - **Viết file bằng công cụ sửa file, không qua chuỗi shell**, để tránh lỗi quoting như mục 4 #5.
+- **Luôn chạy `git ls-remote --tags origin` ngay sau khi tag**, và có checklist chốt phase cố định (bằng chứng → commit → tag → push tag → kiểm tra remote). Mục 4 #7: tag `phase-3` bị quên và chỉ được phát hiện khi chốt phase sau. Nên thêm bước này vào skill `verify`.
 - **Lên kế hoạch accessibility và âm thanh từ Phase 1:** chữ ≥ 18 px và đổi phím rẻ hơn nhiều nếu làm ngay từ đầu.

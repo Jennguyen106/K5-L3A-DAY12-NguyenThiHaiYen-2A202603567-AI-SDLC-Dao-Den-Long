@@ -20,3 +20,8 @@
   claude-haiku-5-5:       3.6k input, 398 output, 0 cache read, 0 cache write ($0.0006)
   claude-opus-5-5:        4.7k input, 404.4k output, 62.2m cache read, 575.6k cache write ($25.15)
   Prompt cache (main):    184 requests · 99% of input tokens from cache · no misses · warm (1h TTL, last activity 37s ago)
+
+## Sự cố: quên tag phase-3
+- Tag `phase-3` bị quên ở bước chốt Phase 3 (chuyển thẳng sang Phase 4). Chỉ phát hiện khi `git ls-remote --tags origin` lúc chốt Phase 4 thiếu phase-3.
+- Đã tag tại commit cuối Phase 3 `c32391d` và push muộn lúc 17:26. Bằng chứng Phase 3 tạo sau, trong Phase 4, bằng cách chạy `npm test` trên worktree checkout tag `phase-3` (47/47 pass), lưu ở `docs/proof/phase-3/`.
+- **Bài học:** luôn kiểm tra `git ls-remote --tags origin` ngay sau khi tag.
