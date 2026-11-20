@@ -3,6 +3,7 @@
 // TICKET-02 (phase-2-spec mục 2). Các khóa mới (dash_*, night2/3) được kiểm thêm ở P2-01.
 // [v1.2] File kỳ vọng đổi tiếp sang contract 1.2 (TICKET-03): thời lượng Đêm 240/270/300 s,
 // điểm mới, thêm các khóa nhiên liệu. Khóa mới được kiểm thêm ở P3-01.
+// [v1.3] File kỳ vọng đổi contract_version sang "1.3" (TICKET-04 thêm bench_cmd/soak_cmd, tuning giữ nguyên).
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';

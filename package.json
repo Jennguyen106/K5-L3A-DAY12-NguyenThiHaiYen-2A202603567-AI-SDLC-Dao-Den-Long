@@ -10,9 +10,14 @@
   "scripts": {
     "test": "node --test",
     "headless": "node src/headless.js",
-    "start": "node tools/serve.js"
+    "start": "node tools/serve.js",
+    "soak": "node --expose-gc src/soak.js",
+    "bench": "node tools/bench.js"
   },
   "dependencies": {
     "three": "0.187.0"
+  },
+  "devDependencies": {
+    "playwright": "1.65.1"
   }
 }

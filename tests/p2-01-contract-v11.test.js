@@ -18,7 +18,8 @@ const SPEC_TUNING = {
 
 test('P2-01: contract (≥ v1.1) và tuning chuẩn TICKET-02 còn hiệu lực', () => {
   const c = contract();
-  assert.equal(c.contract_version, '1.2'); // [v1.2] v1.1 → 1.2
+  // [v1.2] v1.1 → 1.2. [v1.3] TICKET-04 nâng tiếp lên 1.3 (chỉ thêm bench_cmd/soak_cmd, tuning v1.1 vẫn còn hiệu lực).
+  assert.equal(c.contract_version, '1.3');
   for (const k of ['dash_speed', 'dash_duration_s', 'dash_cooldown_s', 'night2_duration_s', 'night3_duration_s']) {
     assert.ok(k in c.tuning, `thiếu khóa tuning.${k}`);
   }

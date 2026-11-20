@@ -16,7 +16,8 @@ const SCORE = {
 
 test('P3-01: contract v1.2 và snapshot có trường mới', () => {
   const c = contract();
-  assert.equal(c.contract_version, '1.2');
+  // [v1.3] TICKET-04 nâng contract lên 1.3; mọi khóa v1.2 giữ nguyên nên chỉ đổi version.
+  assert.equal(c.contract_version, '1.3');
   for (const [k, v] of Object.entries(V12)) assert.equal(c.tuning[k], v, `tuning.${k}`);
   assert.deepEqual(c.tuning.score, SCORE);
 
