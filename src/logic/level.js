@@ -70,6 +70,7 @@ export function createLevel(cfg, seed, night = 1) {
     result: null,
     score: 0,
     time_left_ticks: cfg.night_ticks_by_night[night],
+    shade_speed: L.shade_speed ?? cfg.shade_speed, // Đêm 3: 4.5 m/s
     random_motes: true,
     random_shades: true,
     wind: { active: false, dir_deg: 0 },
@@ -88,6 +89,7 @@ export function createLevel(cfg, seed, night = 1) {
       dash_cd: 0,
       dash_ticks: 0,
       dash_dir: [...L.facing],
+      launch: null, // vận tốc ngang từ bục nhảy, giữ tới khi chạm đất
       charm: 0,
       respawn_wait: 0,
       successful_lights: 0, // số lần thắp thành công trong Đêm (cả thắp lại)

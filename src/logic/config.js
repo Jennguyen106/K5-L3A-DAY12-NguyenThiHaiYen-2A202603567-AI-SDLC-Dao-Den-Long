@@ -30,6 +30,7 @@ export const STD = Object.freeze({
   recoil_m: 2,
   recoil_ticks: 60,
   safe_evict_ticks: 30,
+  step_height: 0.3, // bước lên tối đa; mặt cao hơn là vách đứng
 });
 
 const NUMERIC_KEYS = [

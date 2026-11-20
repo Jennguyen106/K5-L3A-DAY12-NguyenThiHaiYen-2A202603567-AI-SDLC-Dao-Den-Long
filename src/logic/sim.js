@@ -54,10 +54,22 @@ function blockAtSafeEdge(s, sh) {
   }
 }
 
+function pushOutOfObstacles(s, e) {
+  for (const o of s.level.obstacles) {
+    const d = distXZ(e.x, e.z, o.x, o.z);
+    if (e.y < o.top && d < o.r) {
+      const [ux, uz] = unit(e.x - o.x, e.z - o.z);
+      e.x = o.x + ux * o.r;
+      e.z = o.z + uz * o.r;
+    }
+  }
+}
+
 function moveShadeBy(s, sh, dx, dz) {
   sh.x += dx;
   sh.z += dz;
   blockAtSafeEdge(s, sh);
+  pushOutOfObstacles(s, sh);
   sh.y = (groundAt(s, sh.x, sh.z) ?? 0) + s.cfg.shade_height;
 }
 
@@ -98,6 +110,16 @@ function dropMotes(s, n) {
   }
 }
 
+// Vị trí (x, z) ở độ cao chân y có bị chặn không: vách (mặt cao hơn chân quá step_height) hoặc tháp.
+function blockedAt(s, x, z, y) {
+  const g = groundAt(s, x, z);
+  if (g !== null && g > y + s.cfg.step_height) return true;
+  for (const o of s.level.obstacles) {
+    if (y < o.top && distXZ(x, z, o.x, o.z) < o.r) return true;
+  }
+  return false;
+}
+
 function movePlayer(s, inp, edges, emit) {
   const c = s.cfg;
   const p = s.player;
@@ -113,6 +135,7 @@ function movePlayer(s, inp, edges, emit) {
       p.grounded = true;
       p.facing = [...L.facing];
       p.dash_ticks = 0;
+      p.launch = null;
       p.invuln = c.invuln_ticks;
     }
     return;
@@ -141,14 +164,17 @@ function movePlayer(s, inp, edges, emit) {
 
   const prevY = p.y;
   const prev = [p.x, p.z];
+  let dashing = false;
   if (p.dash_ticks > 0) {
-    // Lướt trên không giữ nguyên độ cao.
+    // Lướt trên không giữ nguyên độ cao (cả khi đang bay từ bục nhảy).
     p.vx = p.dash_dir[0] * c.dash_speed;
     p.vz = p.dash_dir[1] * c.dash_speed;
     p.vy = 0;
-    p.x += p.vx * DT;
-    p.z += p.vz * DT;
     p.dash_ticks--;
+    dashing = true;
+  } else if (p.launch) {
+    // Bay từ bục nhảy: vận tốc phóng giữ nguyên tới khi chạm đất (phím di chuyển không ghi đè).
+    [p.vx, p.vz] = p.launch;
   } else {
     const speed = p.charm > 0 ? c.charm_speed : c.player_speed;
     p.vx = wx * speed; // tăng tốc/dừng tức thời (≤ 0.1 s), điều khiển trên không đầy đủ
@@ -157,12 +183,22 @@ function movePlayer(s, inp, edges, emit) {
       p.vy = c.jump_velocity;
       p.grounded = false;
     }
-    p.x += p.vx * DT;
-    p.z += p.vz * DT;
-    if (!p.grounded) {
-      p.vy -= c.gravity * DT;
-      p.y += p.vy * DT;
-    }
+  }
+  if (!dashing && !p.grounded) {
+    p.vy -= c.gravity * DT;
+    p.y += p.vy * DT;
+  }
+
+  // Di chuyển ngang, bị vách/tháp chặn (trượt theo từng trục).
+  const nx = p.x + p.vx * DT;
+  const nz = p.z + p.vz * DT;
+  if (!blockedAt(s, nx, nz, p.y)) {
+    p.x = nx;
+    p.z = nz;
+  } else if (!blockedAt(s, nx, p.z, p.y)) {
+    p.x = nx;
+  } else if (!blockedAt(s, p.x, nz, p.y)) {
+    p.z = nz;
   }
 
   const g = groundAt(s, p.x, p.z);
@@ -170,16 +206,30 @@ function movePlayer(s, inp, edges, emit) {
     // fall_enabled = false: chặn ở mép đảo.
     [p.x, p.z] = prev;
   } else if (p.grounded) {
-    if (g === null) {
+    if (g === null || g < p.y - c.step_height) {
+      // Bước ra khỏi mép (biển mây hoặc tầng thấp hơn) → rơi.
       p.grounded = false;
-      p.vy = 0;
+      if (!dashing) p.vy = 0;
     } else {
-      p.y = g;
+      p.y = g; // đi trên mặt phẳng hoặc dốc
     }
   } else if (g !== null && p.vy <= 0 && p.y <= g && prevY >= g - EPS) {
     p.y = g;
     p.vy = 0;
     p.grounded = true;
+    p.launch = null;
+  }
+
+  // Bục nhảy: chân Mây chạm bục thì được bắn lên.
+  if (p.grounded) {
+    for (const pad of L.pads) {
+      if (distXZ(p.x, p.z, pad.x, pad.z) <= pad.r && Math.abs(p.y - pad.y) < 0.05) {
+        p.vy = pad.vy;
+        p.launch = [...pad.h];
+        p.grounded = false;
+        break;
+      }
+    }
   }
 
   // Rơi khỏi đảo: đúng 1 lần, bỏ qua bất tử.
@@ -191,6 +241,7 @@ function movePlayer(s, inp, edges, emit) {
     p.vy = 0;
     p.vz = 0;
     p.dash_ticks = 0;
+    p.launch = null;
     p.respawn_wait = c.respawn_wait_ticks;
     emit('player_hit', { by: 'fall', flames: p.flames, dropped: 0, lost });
   }
@@ -235,7 +286,7 @@ function moveShades(s) {
       sh.target = null;
     }
     if (sh.state === 'chase') {
-      moveTowards(s, sh, p.x, p.z, c.shade_speed);
+      moveTowards(s, sh, p.x, p.z, s.shade_speed);
       continue;
     }
     // wander: đèn sáng có fuel < 30 gần nhất → tới hút; không có thì đi về đèn tắt gần nhất;
