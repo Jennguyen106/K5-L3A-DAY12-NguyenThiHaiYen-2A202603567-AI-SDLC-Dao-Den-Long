@@ -1,3 +1,7 @@
+🎬 Video demo: https://github.com/Jennguyen106/K5-L3A-DAY12-NguyenThiHaiYen-2A202603567-AI-SDLC-Dao-Den-Long/releases/download/v1.0.0/demo.mp4
+
+📦 Bản chạy được: xem [Release v1.0.0](https://github.com/Jennguyen106/K5-L3A-DAY12-NguyenThiHaiYen-2A202603567-AI-SDLC-Dao-Den-Long/releases/tag/v1.0.0)
+
 # Đảo Đèn Lồng
 
 Game 3D nhỏ chạy trên trình duyệt (Three.js). Bạn điều khiển **Mây**, người giữ đèn nhỏ tuổi của một hòn đảo giữa biển mây. Đêm nay sương đen nuốt mất ánh sáng: Mây phải nhặt đom đóm, thắp và châm dầu cho các Đèn Lồng Lớn, xua những Bóng Mực tím đen đang hút dầu, và **giữ đảo đủ sáng tới bình minh**.
