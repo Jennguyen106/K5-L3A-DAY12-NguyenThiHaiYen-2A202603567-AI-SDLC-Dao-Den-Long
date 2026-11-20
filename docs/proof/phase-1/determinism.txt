@@ -1,0 +1,22 @@
+# AC3 – Tính tất định: seed 42, 3000 tick, chạy 2 lần
+# Ngày chạy: 2026-11-20T08:56:25Z   Node: v26.13.1   Commit: 2f00d57
+
+$ node src/headless.js --seed 42 --night 1 --ticks 3000 --out run1.jsonl
+exit code: 0
+$ node src/headless.js --seed 42 --night 1 --ticks 3000 --out run2.jsonl
+exit code: 0
+
+$ wc -l run1.jsonl run2.jsonl
+    87 run1.jsonl
+    87 run2.jsonl
+   174 total
+
+$ sha256sum run1.jsonl run2.jsonl
+f0a34717d3e885c3ac7dbd4c6433b436bd67cb9b501bc0dd9a30c5431272a8f8 *run1.jsonl
+f0a34717d3e885c3ac7dbd4c6433b436bd67cb9b501bc0dd9a30c5431272a8f8 *run2.jsonl
+
+$ cmp run1.jsonl run2.jsonl && echo IDENTICAL
+IDENTICAL
+
+$ tail -1 run1.jsonl
+{"type":"end","ticks":815,"state":"lost","score":0}

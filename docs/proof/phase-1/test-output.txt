@@ -1,0 +1,26 @@
+
+> dao-den-long@0.1.0 test
+> node --test
+
+✔ AC1: game.contract.json hợp lệ và tuning khớp config (4.4489ms)
+✔ AC2: headless 100 tick (279.2562ms)
+✔ AC3: cùng seed 42 cho output giống hệt (494.7001ms)
+✔ AC4: tick giảm dần trong inputs → exit 2 (302.5042ms)
+✔ AC5: đi thẳng +Z 60 tick (292.4951ms)
+✔ AC6: đi với cam_yaw_deg 90 (284.1618ms)
+✔ AC7: nhặt đom đóm ở tick 1 (341.539ms)
+✔ AC8: nạp 10 đom đóm thắp L1 (258.1408ms)
+✔ AC9: pulse lần 1 choáng S1, lần 2 bị cooldown chặn (269.1178ms)
+✔ AC10: bị chạm rồi bất tử 1.5 s (243.7939ms)
+✔ AC11: hết lửa thì thua (217.876ms)
+✔ AC12: hết giờ thì thua (dawn) ở tick 60 (187.5522ms)
+✔ AC13: thắp L5 thì thắng, đèn đặt sẵn không được cộng điểm (113.1526ms)
+✔ AC14: Bóng Mực không vào vùng an toàn của đèn đã thắp (126.7346ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 877.8291
