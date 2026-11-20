@@ -1,0 +1,40 @@
+
+> dao-den-long@0.1.0 test
+> node --test
+
+✔ AC1: game.contract.json hợp lệ và tuning khớp config (5.2515ms)
+✔ AC2: headless 100 tick (271.7919ms)
+✔ AC3: cùng seed 42 cho output giống hệt (866.2264ms)
+✔ AC4: tick giảm dần trong inputs → exit 2 (336.1721ms)
+✔ AC5: đi thẳng +Z 60 tick (336.8262ms)
+✔ AC6: đi với cam_yaw_deg 90 (298.4151ms)
+✔ AC7: nhặt đom đóm ở tick 1 (395.0274ms)
+✔ AC8: nạp 10 đom đóm thắp L1 (338.2384ms)
+✔ AC9: pulse lần 1 choáng S1, lần 2 bị cooldown chặn (296.1621ms)
+✔ AC10: bị chạm rồi bất tử 1.5 s (458.1731ms)
+✔ AC11: hết lửa thì thua (397.8616ms)
+✔ AC12: hết giờ thì thua (dawn) ở tick 60 (359.3428ms)
+✔ AC13: thắp L5 thì thắng, đèn đặt sẵn không được cộng điểm (311.9451ms)
+✔ AC14: Bóng Mực không vào vùng an toàn của đèn đã thắp (315.2451ms)
+✔ P2-01: contract v1.1 và tuning chuẩn (7.4437ms)
+✔ P2-02: đủ 14 test Phase 1, test đổi kỳ vọng có ghi lý do [v1.1] (7.4617ms)
+✔ P2-03: snapshot đủ trường v1.1 (303.5271ms)
+✔ P2-04: lướt 14 m/s trong 12 tick, hồi chiêu 90 tick (286.6074ms)
+✔ P2-05: Tỏa Sáng choáng 120 tick và đẩy 4 m trong 15 tick (196.8569ms)
+✔ P2-05: thiếu đom đóm (carried 2) thì không kích hoạt (193.4963ms)
+✔ P2-06: bị đánh rơi đom đóm ra vành, bất tử 90 tick, recoil (236.7563ms)
+✔ P2-07: rơi khỏi đảo rồi hồi sinh (227.4722ms)
+✔ P2-08: đẩy Bóng Mực ra khỏi vùng an toàn khi đèn vừa thắp (237.3308ms)
+✔ P2-09: hết lửa → lost no_flames (238.3613ms)
+✔ P2-09: thắp đèn cuối đúng tick hết giờ → won (144.4295ms)
+✔ P2-09: mọi đèn đã sáng nhưng hết lửa ở tick đó → vẫn thua no_flames (151.8717ms)
+✔ P2-16: headless 21.600 tick ≤ 30 s (591.3541ms)
+ℹ Đêm 1, seed 42, --ticks 21600: chạy 21600 tick (lost) trong 0.58 s
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1852.9218
