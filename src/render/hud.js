@@ -1,6 +1,7 @@
 // HUD và màn hình thắng/thua (DOM). Chỉ đọc trạng thái logic.
 
 const REASON = {
+  dawn_survived: 'Bình minh đã tới và đảo vẫn đủ sáng. Mây đã giữ được ánh đèn!',
   all_lit: 'Mây đã thắp sáng cả 5 Đèn Lồng Lớn. Đảo Bến lại ấm áp!',
   dawn: 'Trời đã sáng mà đảo vẫn chưa thắp đủ đèn.',
   no_flames: 'Mây đã hết lửa vì Bóng Mực.',
