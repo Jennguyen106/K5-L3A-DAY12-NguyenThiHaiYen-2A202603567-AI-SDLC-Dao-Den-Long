@@ -37,3 +37,16 @@ fuel_max 100 · fuel_decay_per_s 1.0 · fuel_per_mote 10 · relight_cost 5 · wi
 | P3-11 | Điểm bình minh: mỗi đèn sáng +50 + floor(fuel), mỗi lửa +50 |
 | P3-12 | Test cũ bị thay thế: đã sửa/xóa có comment lý do, không skip |
 | P3-13 (UI) | Thanh dầu, nhấp nháy, HUD mang/sức chứa, chế độ mù màu (ảnh chụp) |
+
+## 5. Giả định thêm khi cài P0 (ticket chưa nói rõ)
+- **Wander khi không có đèn yếu:** đi tới cách đèn tắt gần nhất 2 m, rồi đứng đó. Không còn đèn tắt nào thì lượn quanh điểm sinh như Phase 2. Đi bằng tốc độ wander 1.5 m/s (cả khi đi tới đèn yếu).
+- **Vào drain:** sau khi di chuyển ở bước 8, nếu cách đèn yếu ≤ 2 m (XZ). Lượng hút được trừ từ bước 2 của tick sau.
+- **Đếm `fuel_drain`:** mỗi con có bộ đếm riêng, bắt đầu khi vào drain. Event ghi ở tick thứ 60, 120, … của lần hút liên tục, với `fuel` là dầu còn lại sau khi trừ.
+- **Rời drain:** xét ở đầu bước 8 theo thứ tự: Mây ≤ 6 m → `chase`; đèn tắt / fuel ≥ 30 / cách > 2 m → `wander`.
+- **Bị đẩy ra khi đèn có vùng an toàn trở lại:** con đang drain chuyển về `wander` ngay lúc bắt đầu bị đẩy.
+- **Đèn trong scenario:**
+  - `lit: true` → `ever_lit` mặc định true, `deposited` mặc định bằng chi phí thắp (10), `fuel` mặc định 100.
+  - `lit: false` → `fuel` luôn 0.
+  - `shades[].target_lantern_id` chỉ dùng cho `state: "drain"` (bắt buộc có). Với `wander`, mục tiêu được chọn lại mỗi tick nên trường này bị bỏ qua.
+- **Điểm bình minh:** `floor(fuel)` dùng dầu thật (đơn vị 1/60 chia 60, làm tròn xuống), không dùng giá trị đã làm tròn 1 chữ số trong snapshot.
+- **"Đèn đầy dầu không được chọn":** chỉ xảy ra khi fuel đúng 100. Vì bước 2 hao dầu trước bước 5, điều này không dựng được qua headless; test P3-05 kiểm trên hàm `pickInteractLantern`.
