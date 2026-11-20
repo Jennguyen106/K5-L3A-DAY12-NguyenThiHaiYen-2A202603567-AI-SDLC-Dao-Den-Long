@@ -1,0 +1,64 @@
+# Bằng chứng được tạo trong Phase 4, chạy trên mã của tag phase-3 (commit c32391d)
+# Ngày: 2026-11-20T10:29:18Z · Node v26.13.1 · git worktree tạm, npm install mới
+$ npm test
+
+> dao-den-long@0.1.0 test
+> node --test
+
+✔ AC1: game.contract.json hợp lệ và tuning khớp config (5.4632ms)
+✔ AC2: headless 100 tick (238.1551ms)
+✔ AC3: cùng seed 42 cho output giống hệt (618.8909ms)
+✔ AC4: tick giảm dần trong inputs → exit 2 (212.8289ms)
+✔ AC5: đi thẳng +Z 60 tick (188.7758ms)
+✔ AC6: đi với cam_yaw_deg 90 (219.6033ms)
+✔ AC7: nhặt đom đóm ở tick 1 (179.8799ms)
+✔ AC8: nạp 10 đom đóm thắp L1 (195.0229ms)
+✔ AC9: pulse lần 1 choáng S1, lần 2 bị cooldown chặn (205.2728ms)
+✔ AC10: bị chạm rồi bất tử 1.5 s (197.011ms)
+✔ AC11: hết lửa thì thua (204.6672ms)
+✔ AC12: hết giờ thì thua (dawn) ở tick 60 (218.3966ms)
+✔ AC13: thắp L5 (L1–L4 đặt sẵn) không kết thúc Đêm, đèn đặt sẵn không được cộng điểm (632.7996ms)
+✔ AC14: Bóng Mực không vào vùng an toàn của đèn đã thắp (466.8505ms)
+✔ P2-01: contract (≥ v1.1) và tuning chuẩn TICKET-02 còn hiệu lực (3.5861ms)
+✔ P2-02: đủ 14 test Phase 1, test đổi kỳ vọng có ghi lý do [v1.1] (20.1121ms)
+✔ P2-03: snapshot đủ trường v1.1 (356.6414ms)
+✔ P2-04: lướt 14 m/s trong 12 tick, hồi chiêu 90 tick (515.6596ms)
+✔ P2-05: Tỏa Sáng choáng 120 tick và đẩy 4 m trong 15 tick (391.9101ms)
+✔ P2-05: thiếu đom đóm (carried 2) thì không kích hoạt (258.1943ms)
+✔ P2-06: bị đánh rơi đom đóm ra vành, bất tử 90 tick, recoil (358.2268ms)
+✔ P2-07: rơi khỏi đảo rồi hồi sinh (424.3159ms)
+✔ P2-08: đẩy Bóng Mực ra khỏi vùng an toàn khi đèn vừa thắp (426.5078ms)
+✔ P2-09: hết lửa → lost no_flames (236.6897ms)
+✔ P2-09: thắp đèn cuối đúng tick hết giờ → won (255.6024ms)
+✔ P2-09: mọi đèn đã sáng nhưng hết lửa ở tick đó → vẫn thua no_flames (149.282ms)
+✔ P2-16: headless 21.600 tick ≤ 30 s (647.1415ms)
+ℹ Đêm 1, seed 42, --ticks 21600: chạy 21600 tick (lost) trong 0.64 s
+✔ P3-01: contract v1.2 và snapshot có trường mới (207.2839ms)
+✔ P3-02: dầu hao 1/giây (310.9172ms)
+✔ P3-03: hết dầu thì tắt và nhớ ever_lit (221.6074ms)
+✔ P3-04: thắp lại chỉ cần 5 đom đóm (192.5749ms)
+✔ P3-04: đèn chưa từng sáng vẫn cần 10 (5 đom đóm chưa đủ) (187.1798ms)
+✔ P3-05: châm dầu dùng ceil((100 − fuel)/10) đom đóm (187.0059ms)
+✔ P3-05: đèn đầy dầu (fuel 100) không được chọn khi tương tác (2.2589ms)
+✔ P3-06: wander → tới đèn yếu → drain, dầu giảm 6/giây (207.5467ms)
+✔ P3-06: fuel đúng 30 vẫn còn vùng an toàn, dưới 30 thì mất (165.1641ms)
+✔ P3-07: drain → chase khi Mây vào trong 6 m (169.3056ms)
+✔ P3-07: Tỏa Sáng trúng con đang drain được +15 (170.7044ms)
+✔ P3-08: đủ 5 đèn sáng vẫn chơi tiếp tới bình minh (194.654ms)
+✔ P3-08: bình minh với 3/5 đèn sáng → won dawn_survived (141.4995ms)
+✔ P3-08: bình minh với 2/5 đèn sáng → lost dawn (86.8947ms)
+✔ P3-09: hết lửa đúng tick bình minh vẫn thua no_flames (199.0702ms)
+✔ P3-10: sau 2 lần thắp thành công, capacity = 14 (203.4733ms)
+✔ P3-10: sức chứa tối đa 20 (116.4844ms)
+✔ P3-10: nhặt không vượt sức chứa (78.7251ms)
+✔ P3-11: điểm khi thắng ở bình minh (123.1223ms)
+✔ P3-12: test cũ đổi theo v1.2 có ghi lý do, không skip (46.3339ms)
+ℹ tests 47
+ℹ suites 0
+ℹ pass 47
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1909.8801
+exit code: 0
