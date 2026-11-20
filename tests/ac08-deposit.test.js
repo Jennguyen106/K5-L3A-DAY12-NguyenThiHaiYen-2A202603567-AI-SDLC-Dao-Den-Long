@@ -14,9 +14,11 @@ test('AC8: nạp 10 đom đóm thắp L1', () => {
   assert.deepEqual(dep[0].data, { lantern_id: 'L1', amount: 10, deposited: 10 });
   const lit = eventsNamed(r, 'lantern_lit');
   assert.equal(lit.length, 1);
-  assert.deepEqual(lit[0].data, { lantern_id: 'L1' });
+  // [v1.2] lantern_lit có thêm trường relight (false khi thắp lần đầu).
+  assert.deepEqual(lit[0].data, { lantern_id: 'L1', relight: false });
   // [v1.1] Điểm chuẩn hóa: +10 × 10 đom đóm nạp + 100 thắp đèn = 200 (Phase 1 chỉ tính 100 cho đèn).
-  assert.equal(r.end.score, 200);
+  // [v1.2] Điểm mới TICKET-03: +5 × 10 đom đóm nạp + 100 thắp lần đầu = 150 (v1.1: 200).
+  assert.equal(r.end.score, 150);
   const last = r.snapshots[r.snapshots.length - 1];
   assert.equal(last.player.carried, 0);
   assert.equal(last.lanterns.find((l) => l.id === 'L1').lit, true);
