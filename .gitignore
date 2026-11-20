@@ -224,3 +224,7 @@ __marimo__/
 
 # Node
 node_modules/
+
+# Bang xep hang cuc bo (du lieu nguoi choi) va ban dong goi
+data/
+dist/
