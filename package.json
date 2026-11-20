@@ -9,7 +9,8 @@
   },
   "scripts": {
     "test": "node --test",
-    "headless": "node src/headless.js"
+    "headless": "node src/headless.js",
+    "start": "node tools/serve.js"
   },
   "dependencies": {
     "three": "0.187.0"
