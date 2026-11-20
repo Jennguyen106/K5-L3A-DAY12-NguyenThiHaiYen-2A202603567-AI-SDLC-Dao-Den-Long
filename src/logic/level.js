@@ -2,6 +2,7 @@
 import { mulberry32 } from './rng.js';
 import { validateScenario } from './validate.js';
 import { getNight, UnsupportedError } from './levels.js';
+import { FUEL_UNIT } from './config.js';
 
 export const r3 = (v) => {
   const r = Math.round(v * 1000) / 1000;
@@ -39,6 +40,8 @@ export function newShade(s, id, x, z, state, ticksLeft) {
     push_left: 0,
     recoil_dir: [1, 0],
     evict: null,
+    drain_lantern: null, // id đèn đang hút (trạng thái drain)
+    drain_ticks: 0,
   };
   return sh;
 }
@@ -87,8 +90,11 @@ export function createLevel(cfg, seed, night = 1) {
       dash_dir: [...L.facing],
       charm: 0,
       respawn_wait: 0,
+      successful_lights: 0, // số lần thắp thành công trong Đêm (cả thắp lại)
     },
-    lanterns: L.lanterns.map(([id, x, y, z]) => ({ id, x, y, z, lit: false, deposited: 0 })),
+    lanterns: L.lanterns.map(([id, x, y, z]) => ({
+      id, x, y, z, lit: false, deposited: 0, fuel: 0, ever_lit: false, relit_count: 0,
+    })),
     motes: [],
     shades: [],
     drifters: [],
@@ -118,6 +124,7 @@ export function applyScenario(s, sc) {
     if ('dash_cd_ticks' in d) p.dash_cd = d.dash_cd_ticks;
     if ('pulse_cd_ticks' in d) p.pulse_cd = d.pulse_cd_ticks;
     if ('charm_ticks' in d) p.charm = d.charm_ticks;
+    if ('successful_lights' in d) p.successful_lights = d.successful_lights;
   }
   for (const k of ['random_motes', 'random_shades']) if (k in sc) s[k] = sc[k];
   if ('wind_enabled' in sc && sc.wind_enabled) {
@@ -150,6 +157,7 @@ export function applyScenario(s, sc) {
         const len = Math.hypot(dx, dz);
         sh.recoil_dir = len === 0 ? [1, 0] : [dx / len, dz / len];
       }
+      if (state === 'drain') sh.drain_lantern = d.target_lantern_id;
       s.shades.push(sh);
     }
     s.shades.sort(byId);
@@ -159,8 +167,14 @@ export function applyScenario(s, sc) {
     for (const d of sc.lanterns) {
       const l = s.lanterns.find((x) => x.id === d.id);
       if (d.pos) [l.x, l.y, l.z] = d.pos;
-      if ('deposited' in d) l.deposited = d.deposited;
       if ('lit' in d) l.lit = d.lit;
+      // Đèn đặt lit: true mà không có fuel thì mặc định fuel 100. Đèn tắt luôn có fuel 0.
+      if (l.lit) l.fuel = 'fuel' in d ? Math.round(d.fuel * FUEL_UNIT) : c.fuel_max_u;
+      else l.fuel = 0;
+      // Đèn đang sáng thì đã từng sáng; deposited giữ bằng chi phí đã thắp.
+      l.ever_lit = 'ever_lit' in d ? d.ever_lit || l.lit : l.lit;
+      if ('deposited' in d) l.deposited = d.deposited;
+      else if (l.lit) l.deposited = c.lantern_cost;
     }
   }
   if ('time_left_s' in sc) s.time_left_ticks = Math.round(sc.time_left_s * 60);

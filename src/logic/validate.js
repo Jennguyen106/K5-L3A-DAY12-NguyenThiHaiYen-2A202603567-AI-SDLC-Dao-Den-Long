@@ -19,7 +19,7 @@ function checkVec3(v, where) {
 }
 
 export const BUTTONS = ['jump', 'interact', 'pulse', 'dash', 'pause'];
-export const SHADE_STATES = ['spawning', 'wander', 'chase', 'recoil', 'stunned'];
+export const SHADE_STATES = ['spawning', 'wander', 'chase', 'recoil', 'stunned', 'drain'];
 
 export function validateInputs(obj) {
   if (!isObj(obj) || !Array.isArray(obj.frames)) fail('inputs: "frames" array required');
@@ -49,7 +49,7 @@ export function validateScenario(obj, lanternIds) {
     const p = obj.player;
     if (!isObj(p)) fail('scenario.player must be an object');
     if ('pos' in p) checkVec3(p.pos, 'scenario.player.pos');
-    for (const k of ['carried', 'flames', 'invuln_ticks', 'dash_cd_ticks', 'pulse_cd_ticks', 'charm_ticks']) {
+    for (const k of ['carried', 'flames', 'invuln_ticks', 'dash_cd_ticks', 'pulse_cd_ticks', 'charm_ticks', 'successful_lights']) {
       if (k in p && !isNonNegInt(p[k])) fail(`scenario.player.${k} must be a non-negative integer`);
     }
   }
@@ -73,6 +73,10 @@ export function validateScenario(obj, lanternIds) {
         seen.add(s.id);
       }
       if ('state' in s && !SHADE_STATES.includes(s.state)) fail(`${w}.state must be one of ${SHADE_STATES.join(', ')}`);
+      if ('target_lantern_id' in s && !lanternIds.includes(s.target_lantern_id)) {
+        fail(`${w}.target_lantern_id must be one of ${lanternIds.join(', ')}`);
+      }
+      if (s.state === 'drain' && !('target_lantern_id' in s)) fail(`${w}: state drain requires target_lantern_id`);
       if ('state_ticks_left' in s && !isNonNegInt(s.state_ticks_left)) {
         fail(`${w}.state_ticks_left must be a non-negative integer`);
       }
@@ -92,6 +96,8 @@ export function validateScenario(obj, lanternIds) {
       if ('pos' in l) checkVec3(l.pos, `${w}.pos`);
       if ('deposited' in l && !isNonNegInt(l.deposited)) fail(`${w}.deposited must be a non-negative integer`);
       if ('lit' in l && typeof l.lit !== 'boolean') fail(`${w}.lit must be boolean`);
+      if ('ever_lit' in l && typeof l.ever_lit !== 'boolean') fail(`${w}.ever_lit must be boolean`);
+      if ('fuel' in l && !(isNum(l.fuel) && l.fuel >= 0 && l.fuel <= 100)) fail(`${w}.fuel must be a number in [0, 100]`);
     });
   }
   if ('time_left_s' in obj && !(isNum(obj.time_left_s) && obj.time_left_s >= 0)) {

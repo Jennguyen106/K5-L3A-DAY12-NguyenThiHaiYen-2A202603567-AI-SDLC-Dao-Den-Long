@@ -39,8 +39,17 @@ const NUMERIC_KEYS = [
   'flames', 'invuln_s', 'hit_drop_ratio', 'pulse_stun_s',
   'pulse_push_m', 'pulse_cooldown_s', 'safe_radius', 'shade_speed', 'shade_hit_radius',
   'dash_speed', 'dash_duration_s', 'dash_cooldown_s',
+  // v1.2 (TICKET-03 "Đèn cạn dầu")
+  'fuel_max', 'fuel_decay_per_s', 'fuel_per_mote', 'relight_cost', 'win_ratio', 'drain_per_s',
+  'low_fuel_threshold', 'capacity_max',
 ];
-const SCORE_KEYS = ['per_mote', 'per_lantern', 'per_stun', 'per_second_left', 'per_flame_left'];
+const SCORE_KEYS = [
+  'per_mote', 'per_lantern', 'per_relight', 'per_stun', 'per_stun_drain',
+  'per_lantern_dawn', 'per_flame_left', 'per_second_left',
+];
+
+// Nhiên liệu lưu số nguyên theo đơn vị 1/60 (fuel 100 = 6000 đơn vị) để không sai số số thực.
+export const FUEL_UNIT = TICK_RATE;
 
 export function createConfig(tuning) {
   if (!tuning || typeof tuning !== 'object') throw new Error('tuning missing');
@@ -84,6 +93,19 @@ export function createConfig(tuning) {
     dash_speed: tuning.dash_speed,
     dash_ticks: sec(tuning.dash_duration_s),
     dash_cooldown_ticks: sec(tuning.dash_cooldown_s),
+    // Nhiên liệu (đơn vị 1/60): hao/hút tính theo đơn vị mỗi tick.
+    fuel_max_u: Math.round(tuning.fuel_max * FUEL_UNIT),
+    fuel_decay_u: Math.round((tuning.fuel_decay_per_s * FUEL_UNIT) / TICK_RATE),
+    drain_u: Math.round((tuning.drain_per_s * FUEL_UNIT) / TICK_RATE),
+    fuel_per_mote_u: Math.round(tuning.fuel_per_mote * FUEL_UNIT),
+    low_fuel_u: Math.round(tuning.low_fuel_threshold * FUEL_UNIT),
+    relight_cost: tuning.relight_cost,
+    win_ratio: tuning.win_ratio,
+    capacity_max: tuning.capacity_max,
+    capacity_step: 2, // sức chứa = carry_capacity + 2 × successful_lights
+    drain_reach_m: 2,
+    drain_break_m: 6,
+    fuel_drain_event_ticks: 60,
     score: Object.freeze({ ...score }),
   });
 }

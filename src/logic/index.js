@@ -4,4 +4,4 @@ export { NIGHTS, getNight, UnsupportedError } from './levels.js';
 export { FormatError, validateInputs, validateScenario, SHADE_STATES } from './validate.js';
 export { createInputTimeline } from './input.js';
 export { createLevel, applyScenario, r3 } from './level.js';
-export { step, snapshot } from './sim.js';
+export { step, snapshot, pickInteractLantern, capacityOf, fuelOut } from './sim.js';
