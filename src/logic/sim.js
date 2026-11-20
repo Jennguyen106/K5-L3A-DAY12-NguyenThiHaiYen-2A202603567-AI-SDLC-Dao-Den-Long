@@ -280,7 +280,7 @@ function moveShades(s) {
         continue; // đứng yên hút dầu (lượng hút trừ ở bước 2)
       }
     }
-    if (sh.state === 'wander' && d <= c.shade_detect_m) sh.state = 'chase';
+    if (sh.state === 'wander' && d <= c.shade_detect_m && !s.bench) sh.state = 'chase'; // bench: giữ wander
     else if (sh.state === 'chase' && d > c.shade_lose_m) {
       sh.state = 'wander';
       sh.target = null;
@@ -440,9 +440,9 @@ export function step(s, inp) {
       }
     }
   }
-  // Dầu: hao fuel_decay mỗi tick + mỗi Bóng Mực đang drain hút thêm drain_u (cộng dồn).
+  // Dầu: hao fuel_decay mỗi tick + mỗi Bóng Mực đang drain hút thêm drain_u (cộng dồn). Bench: tắt hao dầu.
   for (const l of s.lanterns) {
-    if (!l.lit) continue;
+    if (!l.lit || s.bench) continue;
     const drainers = s.shades.filter((sh) => sh.state === 'drain' && sh.drain_lantern === l.id);
     l.fuel -= c.fuel_decay_u + c.drain_u * drainers.length;
     for (const sh of drainers) {
@@ -470,7 +470,7 @@ export function step(s, inp) {
   const active = p.respawn_wait === 0;
 
   // 4. Nhặt đom đóm (XZ ≤ pickup_radius và chênh cao ≤ 1.5 m), theo id tăng dần.
-  if (active) {
+  if (active && !s.bench) {
     s.motes = s.motes.filter((m) => {
       if (p.carried >= capacityOf(c, p)) return true;
       if (distXZ(p.x, p.z, m.x, m.z) > c.pickup_radius) return true;
@@ -543,7 +543,7 @@ export function step(s, inp) {
   moveShades(s);
 
   // 9. Chạm: Bóng Mực gây hit theo id tăng dần, tối đa 1 lần mỗi tick.
-  if (active && p.invuln === 0 && p.flames > 0) {
+  if (active && !s.bench && p.invuln === 0 && p.flames > 0) {
     const hitter = [...s.shades].sort(byId).find((sh) => !sh.evict
       && (sh.state === 'wander' || sh.state === 'chase')
       && distXZ(p.x, p.z, sh.x, sh.z) <= c.shade_hit_radius
@@ -563,14 +563,16 @@ export function step(s, inp) {
   }
 
   // 10. Sinh đom đóm, Bóng Mực theo lịch (thực thể mới chỉ tương tác được từ tick sau).
-  if (s.random_motes) spawnMote(s, st);
+  if (s.random_motes && !s.bench) spawnMote(s, st);
   if (s.random_shades) spawnShades(s, st, emit);
 
   // 11. Thắng/thua (sau mọi cập nhật của tick, kể cả tick bình minh):
   //     hết lửa → luôn thua no_flames trước; hết giờ → thắng dawn_survived nếu số đèn đang sáng
   //     ≥ ceil(win_ratio × tổng đèn), ngược lại thua dawn. Không còn thắng sớm khi thắp đủ đèn.
   let over = null;
-  if (p.flames <= 0) {
+  if (s.bench) {
+    // Bench: tắt điều kiện kết thúc Đêm.
+  } else if (p.flames <= 0) {
     over = { result: 'lost', reason: 'no_flames' };
   } else if (s.time_left_ticks <= 0) {
     const lit = s.lanterns.filter((l) => l.lit);

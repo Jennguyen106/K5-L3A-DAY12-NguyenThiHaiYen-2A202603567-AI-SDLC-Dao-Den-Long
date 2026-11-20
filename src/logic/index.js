@@ -5,3 +5,4 @@ export { FormatError, validateInputs, validateScenario, SHADE_STATES } from './v
 export { createInputTimeline } from './input.js';
 export { createLevel, applyScenario, r3 } from './level.js';
 export { step, snapshot, pickInteractLantern, capacityOf, fuelOut } from './sim.js';
+export { createBenchLevel, BENCH } from './bench.js';
