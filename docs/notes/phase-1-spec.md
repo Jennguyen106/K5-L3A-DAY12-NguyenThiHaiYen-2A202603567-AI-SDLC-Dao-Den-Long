@@ -123,3 +123,18 @@ File này ghi các **giả định** cho chỗ PRD-0 mơ hồ. Code và test ph�
 
 - `safe_radius` áp dụng cho mọi đèn hay chỉ đèn đã thắp? → Giả định hiện tại: **chỉ đèn đã thắp** (đảo "sáng dần lên", Bóng Mực "sợ đèn").
 - Đom đóm rơi khi bị chạm thì mất hẳn hay nằm lại? → Giả định: **mất hẳn**.
+
+### Giả định thêm khi cài đặt (spec chưa nói rõ)
+
+- **Pulse đẩy vẫn tôn trọng vùng an toàn:** Bóng Mực bị pulse đẩy ra mà rơi vào trong `safe_radius` của đèn đã thắp thì cũng bị đặt lại ở mép vùng, cho nhất quán với "Bóng Mực không vào được".
+- **Bóng Mực không đi quá người chơi:** mỗi bước đi `min(shade_speed/60, khoảng cách)`. Nếu trùng vị trí XZ thì đứng yên.
+- **Pulse choáng mọi Bóng Mực trong bán kính**, kể cả con đang `stunned`: thời gian choáng đặt lại từ đầu và vẫn được cộng `per_stun`.
+- **Bộ đếm tính bằng số nguyên tick:** `invuln` 90, `stun` 180, `cooldown` 120, thời gian đêm `round(time_left_s·60)`. Bị chạm ở tick t thì lần chạm sớm nhất tiếp theo là tick t+90. Bóng Mực bị choáng ở bước k thì quay lại `chase` ở tick k+180.
+- **Sinh thêm:** đom đóm sinh ở tick t khi `t % 120 == 0` và trên đảo còn < 20 con. Bóng Mực sinh khi `t % 1800 == 0` và đang có < 6 con. Bán kính đom đóm lấy đều trong [3, 38] m.
+- **Thứ tự dùng RNG (mulberry32(seed)):** 60 đom đóm (góc rồi bán kính) → 2 Bóng Mực (góc) → các lần sinh thêm lúc chạy.
+- **Id:** id Bóng Mực tự sinh = số lớn nhất trong các id scenario đã cho + 1. Đom đóm trong scenario được đánh id `M1, M2…` theo thứ tự trong mảng.
+- **Nhảy:** tích phân Euler bán ẩn (`vy -= 20/60` rồi `y += vy/60`); chạm đất thì `y = 0`, `vy = 0`.
+- **Kết thúc:** khi game kết thúc, headless dừng ngay sau bước đó (`end.ticks` = tick có `game_over`). Điểm thưởng thắng dùng `floor(time_left_s)` sau khi đã trừ thời gian của bước đó.
+- **Scenario:** `lanterns[].id` phải thuộc L1…L5, nếu không thì coi là sai định dạng (exit 2). Đèn đặt `lit: true` giữ `deposited` như đã cho.
+- **Tham số headless sai** (thiếu tham số, `--night` khác 1, tham số lạ) → exit 1. File không đọc được → exit 1. File đọc được nhưng sai định dạng → exit 2.
+- **AC14:** test cho phép sai số 0.002 m vì tọa độ output đã làm tròn 3 chữ số.
