@@ -19,9 +19,12 @@ test('AC13: thắp L5 thì thắng, đèn đặt sẵn không được cộng đ
   assert.equal(r.end.state, 'won');
 
   // Điểm: 1 đèn + giây còn lại (sau 1 bước) + lửa còn lại.
+  // [v1.1] Điểm chuẩn hóa: thêm per_mote × 10 đom đóm nạp vào L5; per_second_left = 2.
+  // = 100 + 100 + 299×2 + 3×50 = 948 (Phase 1: 100 + 299 + 150 = 549).
   const { tuning } = contract();
   const secondsLeft = Math.floor((tuning.night1_duration_s * 60 - 1) / 60);
-  const expected = tuning.score.per_lantern
+  const expected = tuning.score.per_mote * tuning.lantern_cost
+    + tuning.score.per_lantern
     + tuning.score.per_second_left * secondsLeft
     + tuning.score.per_flame_left * tuning.flames;
   assert.equal(r.end.score, expected);

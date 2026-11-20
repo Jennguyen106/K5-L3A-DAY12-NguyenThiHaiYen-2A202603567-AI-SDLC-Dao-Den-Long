@@ -15,8 +15,10 @@ test('AC2: headless 100 tick', () => {
   assert.deepEqual(s0.player.pos, [0, 0, 0]);
   assert.equal(s0.time_left_s, 300);
   assert.equal(s0.lanterns.length, 5);
-  assert.equal(s0.motes_active, 60);
-  assert.equal(s0.shades.length, 2);
+  // [v1.1] Số chuẩn TICKET-02: đầu Đêm có 20 đom đóm (Phase 1 tự chọn 60), và Bóng Mực
+  // chỉ sinh từ tick 300 (Phase 1 có sẵn 2 con ở tick 0). Đổi kỳ vọng 60 → 20 và 2 → 0.
+  assert.equal(s0.motes_active, 20);
+  assert.equal(s0.shades.length, 0);
   // snapshot mặc định mỗi 10 tick: 0, 10, …, 100
   assert.deepEqual(r.snapshots.map((s) => s.tick), [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]);
 });

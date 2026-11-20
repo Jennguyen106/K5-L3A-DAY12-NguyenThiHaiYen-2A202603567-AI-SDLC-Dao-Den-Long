@@ -15,7 +15,8 @@ test('AC8: nạp 10 đom đóm thắp L1', () => {
   const lit = eventsNamed(r, 'lantern_lit');
   assert.equal(lit.length, 1);
   assert.deepEqual(lit[0].data, { lantern_id: 'L1' });
-  assert.equal(r.end.score, 100);
+  // [v1.1] Điểm chuẩn hóa: +10 × 10 đom đóm nạp + 100 thắp đèn = 200 (Phase 1 chỉ tính 100 cho đèn).
+  assert.equal(r.end.score, 200);
   const last = r.snapshots[r.snapshots.length - 1];
   assert.equal(last.player.carried, 0);
   assert.equal(last.lanterns.find((l) => l.id === 'L1').lit, true);

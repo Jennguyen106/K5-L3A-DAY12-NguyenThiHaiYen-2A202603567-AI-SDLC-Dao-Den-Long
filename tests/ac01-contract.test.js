@@ -1,4 +1,6 @@
 // AC1: game.contract.json hợp lệ, tuning trùng với config game dùng.
+// [v1.1] File kỳ vọng scenarios/ac01-contract.expected.json đổi sang contract 1.1 và tuning chuẩn
+// TICKET-02 (phase-2-spec mục 2). Các khóa mới (dash_*, night2/3) được kiểm thêm ở P2-01.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';

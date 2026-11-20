@@ -3,6 +3,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { runHeadless, eventsNamed, contract } from './helpers.js';
 
+// [v1.1] Bóng Mực có trạng thái chuẩn: chỉ đuổi khi cách Mây ≤ 12 m. Con S1 cách 13 m nên sẽ ở
+// "wander" và không bao giờ tới vùng an toàn. Scenario thêm "state": "chase" (trường mới của v1.1)
+// để vẫn kiểm đúng ý AC14; nó không bỏ đuổi vì vẫn cách < 18 m. Kỳ vọng giữ nguyên.
+
 // Tọa độ output đã làm tròn 3 chữ số → cho phép sai số làm tròn.
 const ROUNDING_EPS = 0.002;
 
