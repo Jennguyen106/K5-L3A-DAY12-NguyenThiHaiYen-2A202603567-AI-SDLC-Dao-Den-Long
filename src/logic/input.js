@@ -1,9 +1,11 @@
 // Dòng thời gian input: mỗi frame chỉ đổi các trường có mặt; trường vắng giữ giá trị cũ.
 
-const KEYS = ['cam_yaw_deg', 'jump', 'interact', 'pulse', 'dash'];
+const KEYS = ['cam_yaw_deg', 'jump', 'interact', 'pulse', 'dash', 'pause'];
 
 export function createInputTimeline(frames = []) {
-  const cur = { move: [0, 0], cam_yaw_deg: 0, jump: false, interact: false, pulse: false, dash: false };
+  const cur = {
+    move: [0, 0], cam_yaw_deg: 0, jump: false, interact: false, pulse: false, dash: false, pause: false,
+  };
   let i = 0;
   return {
     // Gọi với k tăng dần (0, 1, 2, …); trả về input của tick k.

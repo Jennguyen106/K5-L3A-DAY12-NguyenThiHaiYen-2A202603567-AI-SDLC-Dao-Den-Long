@@ -1,4 +1,4 @@
-// Kiểm tra định dạng file inputs / scenario. Sai định dạng → FormatError (headless thoát mã 2).
+// Kiểm tra định dạng file inputs / scenario (Contract v1.1). Sai định dạng → FormatError (headless thoát mã 2).
 
 export class FormatError extends Error {
   constructor(msg) {
@@ -18,7 +18,8 @@ function checkVec3(v, where) {
   if (!Array.isArray(v) || v.length !== 3 || !v.every(isNum)) fail(`${where} must be [x, y, z] numbers`);
 }
 
-const BUTTONS = ['jump', 'interact', 'pulse', 'dash'];
+export const BUTTONS = ['jump', 'interact', 'pulse', 'dash', 'pause'];
+export const SHADE_STATES = ['spawning', 'wander', 'chase', 'recoil', 'stunned'];
 
 export function validateInputs(obj) {
   if (!isObj(obj) || !Array.isArray(obj.frames)) fail('inputs: "frames" array required');
@@ -48,10 +49,11 @@ export function validateScenario(obj, lanternIds) {
     const p = obj.player;
     if (!isObj(p)) fail('scenario.player must be an object');
     if ('pos' in p) checkVec3(p.pos, 'scenario.player.pos');
-    if ('carried' in p && !isNonNegInt(p.carried)) fail('scenario.player.carried must be a non-negative integer');
-    if ('flames' in p && !isNonNegInt(p.flames)) fail('scenario.player.flames must be a non-negative integer');
+    for (const k of ['carried', 'flames', 'invuln_ticks', 'dash_cd_ticks', 'pulse_cd_ticks', 'charm_ticks']) {
+      if (k in p && !isNonNegInt(p[k])) fail(`scenario.player.${k} must be a non-negative integer`);
+    }
   }
-  for (const k of ['random_motes', 'random_shades']) {
+  for (const k of ['random_motes', 'random_shades', 'random_drifters', 'wind_enabled']) {
     if (k in obj && typeof obj[k] !== 'boolean') fail(`scenario.${k} must be boolean`);
   }
   if ('motes' in obj) {
@@ -70,7 +72,14 @@ export function validateScenario(obj, lanternIds) {
         if (seen.has(s.id)) fail(`${w}.id duplicated: ${s.id}`);
         seen.add(s.id);
       }
+      if ('state' in s && !SHADE_STATES.includes(s.state)) fail(`${w}.state must be one of ${SHADE_STATES.join(', ')}`);
+      if ('state_ticks_left' in s && !isNonNegInt(s.state_ticks_left)) {
+        fail(`${w}.state_ticks_left must be a non-negative integer`);
+      }
     });
+  }
+  for (const k of ['drifters', 'charms']) {
+    if (k in obj && !Array.isArray(obj[k])) fail(`scenario.${k} must be an array`);
   }
   if ('lanterns' in obj) {
     if (!Array.isArray(obj.lanterns)) fail('scenario.lanterns must be an array');

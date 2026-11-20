@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-// Headless theo Test Contract v1.0 (PRD-0 mục B–E, phase-1-spec mục 5).
-// node src/headless.js --seed <int> --night 1 [--scenario f] [--inputs f] --ticks N --out f.jsonl [--snapshot-every n]
+// Headless theo Test Contract v1.1 (TICKET-02 Phần 4; nền v1.0 ở PRD-0 mục B–E).
+// node src/headless.js --seed <int> --night 1|2|3 [--scenario f] [--inputs f] --ticks N --out f.jsonl [--snapshot-every n]
+// Exit: 0 xong · 1 tham số sai / không đọc được file / tính năng chưa cài · 2 file inputs/scenario sai định dạng.
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import {
@@ -36,8 +37,9 @@ function parseArgs(argv) {
     if (!(req in raw)) throw new ArgError(`missing required --${req}`);
   }
   const night = parseIntArg('night', raw.night, 1);
-  if (night !== 1) throw new ArgError('only --night 1 is supported');
+  if (![1, 2, 3].includes(night)) throw new ArgError('--night must be 1, 2 or 3');
   return {
+    night,
     seed: parseIntArg('seed', raw.seed, Number.MIN_SAFE_INTEGER),
     ticks: parseIntArg('ticks', raw.ticks, 0),
     every: 'snapshot-every' in raw ? parseIntArg('snapshot-every', raw['snapshot-every'], 1) : 10,
@@ -63,13 +65,17 @@ function readJson(path, label) {
 
 export function run(opts) {
   const cfg = createConfig(readJson(CONTRACT_PATH, 'contract').tuning);
-  const s = createLevel(cfg, opts.seed);
+  const s = createLevel(cfg, opts.seed, opts.night);
   if (opts.scenario) applyScenario(s, readJson(opts.scenario, 'scenario'));
   const frames = opts.inputs ? validateInputs(readJson(opts.inputs, 'inputs')) : [];
   const timeline = createInputTimeline(frames);
 
-  const lines = [JSON.stringify(snapshot(s))];
-  for (let k = 0; k < opts.ticks && s.state === 'playing'; k++) {
+  const ended = () => s.state === 'won' || s.state === 'lost';
+  const lines = [
+    JSON.stringify(snapshot(s)),
+    JSON.stringify({ type: 'event', tick: 0, name: 'night_start', data: { night: s.night } }),
+  ];
+  for (let k = 0; k < opts.ticks && !ended(); k++) {
     for (const ev of step(s, timeline.at(k))) lines.push(JSON.stringify(ev));
     if (s.tick % opts.every === 0) lines.push(JSON.stringify(snapshot(s)));
   }
