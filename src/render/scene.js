@@ -256,13 +256,19 @@ export function createWorld(container, cfg, level) {
     hit() {
       hitFlash = 1;
     },
-    frame(s, yawDeg, dt) {
+    // cam (tùy chọn): { pos: [x, y, z], lookAt: [x, y, z] } ghi đè camera bám theo Mây (dùng cho bench).
+    frame(s, yawDeg, dt, cam = null) {
       time += dt;
       syncLanterns(s);
       syncMotes(s);
       syncShades(s);
       syncPlayer(s, dt);
-      syncCamera(s, yawDeg, dt);
+      if (cam) {
+        camera.position.set(...cam.pos);
+        camera.lookAt(...cam.lookAt);
+      } else {
+        syncCamera(s, yawDeg, dt);
+      }
       updateEffects(dt);
       renderer.render(scene, camera);
     },

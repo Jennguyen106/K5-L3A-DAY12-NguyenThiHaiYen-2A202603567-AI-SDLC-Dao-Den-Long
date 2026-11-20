@@ -16,6 +16,17 @@ async function boot() {
   const hud = createHud(cfg);
   const canvas = world.renderer.domElement;
 
+  // Chế độ benchmark: index.html?bench=1&seed=42&duration=30 (TICKET-04 mục 1).
+  const q = new URLSearchParams(window.location.search);
+  if (q.get('bench') === '1') {
+    const { startBench } = await import('./bench.js');
+    window.addEventListener('resize', () => world.resize());
+    startBench({
+      world, hud, cfg, seed: Number(q.get('seed') ?? 42) | 0, durationS: Number(q.get('duration') ?? 30),
+    });
+    return;
+  }
+
   let s = null;
   let running = false;
   let acc = 0;
