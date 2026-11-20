@@ -29,3 +29,21 @@ Nguồn: `docs/requirements/TICKET-04.md` (Contract v1.3). Ticket là chuẩn.
 | P4-08 | Phụ đề/chỉ báo, giảm chuyển động, chữ ≥ 18 px, chữ lớn ×1.25 (ảnh) |
 | P4-09 | Clone sạch → 3 lệnh README → chơi được (ghi lệnh + kết quả) |
 | P4-10 | Release v1.0.0 có zip web chạy được + video |
+
+## 4. Giả định khi cài P0
+- **Soak:**
+  - Đêm thứ i (0-based) là Đêm `1 + (i mod 3)`, seed `7 + i`. Input dùng PRNG riêng `mulberry32((seed ^ 0x9e3779b9) >>> 0)`.
+  - Mỗi 30 tick chọn hướng mới (vector đơn vị, `cam_yaw_deg` 0). Mỗi tick các nút được bốc true/false theo xác suất, nên có cạnh lên.
+  - RSS đo sau `global.gc()` khi chạy với `--expose-gc` (có trong `soak_cmd`).
+  - soak.json có thêm `details` (Đêm, seed, lý do, số tick) làm bằng chứng.
+- **Đêm 2/3 (để soak xoay vòng được):** đã cài địa hình (đảo, cầu, tầng, dốc, vách, tháp chuông, bục nhảy), đèn, đom đóm, lịch Bóng Mực, Bóng Mực Đêm 3 4.5 m/s. **Chưa cài** Gió Lạc, Bùa Gió, gió mạnh: các Đêm này chạy không có chúng. Đêm 3 xuất phát (0,0,−30), vì (0,0,0) nằm trong tháp chuông.
+- **Bench:**
+  - Cả 200 Bóng Mực giữ trạng thái `wander`: tắt chuyển sang chase khi Mây ≤ 12 m, để "di chuyển theo luật wander". Theo luật v1.2, wander đi về đèn tắt gần nhất (L4, L5) nên nhiều con dồn về đó.
+  - Bóng Mực và đom đóm rải đều theo diện tích trên đĩa bán kính 38 m, PRNG riêng từ seed. Bóng Mực không đặt trong vùng an toàn 6 m của L1–L3.
+- **Camera bench:** (30·cos θ, 15, 30·sin θ) với θ = 2π·t/15, t tính từ khung đầu tiên của cảnh. Cùng quy ước góc của bản đồ (ngược chiều kim đồng hồ nhìn từ trên xuống).
+- **Đo bench:**
+  - dt = hiệu timestamp `requestAnimationFrame`. Khoảng đo bắt đầu sau 3 s và kết thúc khi tổng dt ≥ `duration`.
+  - `p95` theo nearest-rank.
+  - `load_ms` = khung đầu tiên (epoch) − thời điểm tiến trình `tools/bench.js` bắt đầu (`Date.now() − process.uptime()`).
+  - `peak_mem_mb` = null: không đo được RSS của Chromium một cách đa nền tảng; kèm `js_heap_peak_mb` (JS heap của trang, qua CDP).
+  - `vsync_off` = true dựa trên cờ `--disable-gpu-vsync --disable-frame-rate-limit`; FPS đo được vượt 60 cho thấy cờ có hiệu lực.
